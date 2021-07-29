@@ -30,23 +30,37 @@ const path = require('path');
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
+app.use(cors());
 
-// app.use(cors);
+const server = http.createServer(app);
+const io = socketIO(server, {
+    cors: {
+        origin: "*",
+    }
+});
+
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello Player One!!</h1>');
 });
 
+let state = {
+    players: []
+}
 
-io.on('connections', (socket) => {
+io.on('connection', (socket) => {
     console.log("A user connected");
+    
+    // Every browser is one computer (aka: one player);
 
-    socket.on("message", (message) => {
-        console.log(message);
-        socket.emit("message", message);
+    let x = 0;
+    socket.on("registerPlayer", (player) => {
+        
+        state.players.push(player);
+        // socket.emit("bipBar", {x});
     });
+
+    socket.emit('serverToClient', "Hello Client!");
 });
 
 
