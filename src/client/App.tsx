@@ -1,21 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { io } from 'socket.io-client';
 
 
 function App() {
-    const game_uri = 'server/api'
-    
-    const socket = io(game_uri, {
-        reconnectionDelayMax: 10000,
-        auth: {
-            token: "auth token goes here"
-        },
-        query: {
-            "my-key": "my-value"
-        }
-    });
+    const game_uri = 'http://localhost:5000';
 
+    const socket = io(game_uri, {/* Options go here */});
+
+    useEffect(() => {
+        socket.on('message', (data) => {
+            console.log(data);
+        });
+    }, []);
 
     return (
         <div className="App">
