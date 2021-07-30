@@ -20,6 +20,7 @@
 
 ---------------------------------------------------------------------------------------- */
 
+const { addPlayer, getPlayer, getActivePlayers } = require('./users');
 
 const express = require('express')
 const socketIO = require('socket.io');
@@ -44,20 +45,19 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello Player One!!</h1>');
 });
 
-let state = {
-    players: []
-}
+
 
 io.on('connection', (socket) => {
     console.log("A user connected");
     
-    // Every browser is one computer (aka: one player);
+    socket.on('registerPlayer', (userName) => {
+        console.log("registered player: ", userName);
+        const {newPlayer} = addPlayer({
+            id: socket.id,
+            userName: userName
+        });
 
-    let x = 0;
-    socket.on("registerPlayer", (player) => {
-        
-        state.players.push(player);
-        // socket.emit("bipBar", {x});
+        socket.broadcast.emit('playersUpdated', getActivePlayers());
     });
 
     socket.emit('serverToClient', "Hello Client!");
