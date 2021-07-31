@@ -42,7 +42,7 @@ const io = socketIO(server, {
 
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello Player One!!</h1>');
+    res.send('<h1>Chinese Poker server</h1>');
 });
 
 
@@ -51,19 +51,20 @@ io.on('connection', (socket) => {
     console.log("A user connected");
     
     socket.on('registerPlayer', (userName) => {
-        console.log("registered player: ", userName);
         const {newPlayer} = addPlayer({
             id: socket.id,
             userName: userName
         });
 
-        socket.broadcast.emit('playersUpdated', getActivePlayers());
+        // socket.broadcast.emit('playersUpdated', getActivePlayers());
+        socket.emit('playersUpdated', getActivePlayers());
+        
+        return newPlayer;
     });
-
-    socket.emit('serverToClient', "Hello Client!");
 });
 
 
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+

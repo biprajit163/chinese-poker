@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import { io } from 'socket.io-client';
-
 /*
 Unicode cards: https://en.wikipedia.org/wiki/Playing_cards_in_Unicode 
 */
 
-function App() {
-    const [msg, setMsg] = useState("sub");
+import React, { useState, useEffect, FC } from 'react';
+import './App.css';
+import { io } from 'socket.io-client';
+import { BrowserRouter, Link, Route } from 'react-router-dom';
+
+import JoinGame from './components/JoinGame';
+
+
+const App: FC = () => {
+    const [msg, setMsg] = useState("Dummy Message");
     
     const game_uri = 'http://localhost:5000';
     const socket = io(game_uri, {
@@ -15,10 +19,6 @@ function App() {
     });
 
     useEffect(() => {
-        socket.on('serverToClient', (data) => {
-            setMsg(data);
-        });
-
         socket.on('playersUpdated', (players) => {
             console.log("updated players: ", players);
         });
@@ -34,7 +34,11 @@ function App() {
     return (
         <div className="App">
             <h1>{msg}</h1>
-            <button onClick={() => handleClick()}>Add user</button>
+            <BrowserRouter>
+                <Route path="/" exact render={() => (
+                    <JoinGame/>
+                )}/>
+            </BrowserRouter>
         </div>
     );
 }

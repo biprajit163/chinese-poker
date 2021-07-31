@@ -6,7 +6,7 @@ const addPlayer = ({id, userName}) => {
     if(maxPlayers === 4) {
         return({error: "Game full"});
     } else {
-        const newPlayer = {id, userName};
+        const newPlayer = {id, userName, hand};
         players.push(newPlayer);
         return({newPlayer});
     }
