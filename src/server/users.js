@@ -1,6 +1,6 @@
 const players = [];
 
-const addPlayer = ({id, userName}) => {
+const addPlayer = ({ id, userName, hand }) => {
     const maxPlayers = players.length;
 
     if(maxPlayers === 4) {
@@ -8,11 +8,11 @@ const addPlayer = ({id, userName}) => {
     } else {
         const newPlayer = {id, userName, hand};
         players.push(newPlayer);
-        return({newPlayer});
+        return({ newPlayer });
     }
 }
 
-const getPlayer = ({id}) => {
+const getPlayer = ({ id }) => {
     return(
         players.find(player => player.id === id)
     );

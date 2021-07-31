@@ -50,16 +50,15 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log("A user connected");
     
-    socket.on('registerPlayer', (userName) => {
+    socket.on('registerPlayer', ({ id, userName, hand }) => {
         const {newPlayer} = addPlayer({
-            id: socket.id,
-            userName: userName
+            id: id,
+            userName: userName,
+            hand: hand
         });
 
         // socket.broadcast.emit('playersUpdated', getActivePlayers());
         socket.emit('playersUpdated', getActivePlayers());
-        
-        return newPlayer;
     });
 });
 

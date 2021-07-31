@@ -13,23 +13,23 @@ import JoinGame from './components/JoinGame';
 const App: FC = () => {
     const [msg, setMsg] = useState("Dummy Message");
     
-    const game_uri = 'http://localhost:5000';
-    const socket = io(game_uri, {
-        reconnectionDelay: 10000,
-    });
+    // const game_uri = 'http://localhost:5000';
+    // const socket = io(game_uri, {
+    //     reconnectionDelay: 10000,
+    // });
 
-    useEffect(() => {
-        socket.on('playersUpdated', (players) => {
-            console.log("updated players: ", players);
-        });
-    }, []);
+    // useEffect(() => {
+    //     socket.on('playersUpdated', (players) => {
+    //         console.log("updated players: ", players);
+    //     });
+    // }, []);
 
-    const handleClick = () => {
-        const player = {
-            userName: 'Player1'
-        };
-        socket.emit('registerPlayer', player);
-    }
+    // const handleClick = () => {
+    //     const player = {
+    //         userName: 'Player1'
+    //     };
+    //     socket.emit('registerPlayer', player);
+    // }
 
     return (
         <div className="App">
