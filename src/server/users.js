@@ -12,6 +12,14 @@ const addPlayer = ({ id, userName, hand }) => {
     }
 }
 
+const removePlayer = (id) => {
+    let playerIdx = players.findIndex(player => player.id === id);
+    
+    if(playerIdx !== -1) {
+        return players.splice(playerIdx, 1);
+    }
+}
+
 const getPlayer = ({ id }) => {
     return(
         players.find(player => player.id === id)
@@ -25,5 +33,6 @@ const getActivePlayers = () => {
 module.exports = {
     addPlayer,
     getPlayer,
+    removePlayer,
     getActivePlayers
 };

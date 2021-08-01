@@ -1,7 +1,6 @@
-import React, { useState, FC } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import { BrowserRouter, Route, Link} from 'react-router-dom';
 import { io } from 'socket.io-client';
-
 
 
 const JoinGame: FC = () => {
@@ -26,16 +25,15 @@ const JoinGame: FC = () => {
         reconnectionDelay: 10000,
     })
 
+    useEffect(() => {
+        socket.on('getPlayers', (players) => setGame(players));
+    }, [])
+
+
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        
-        setPlayer({
-            ...player,
-            id: player.id + 1
-        })
 
         socket.emit('registerPlayer', player);
-        
         socket.on('playersUpdated', (players) => setGame(players));
 
         setPlayer(initialPlayerState);
@@ -47,6 +45,12 @@ const JoinGame: FC = () => {
             userName: e.target.value,
         });
     };
+
+
+    const kickPlayer = (playerObj: any) => {
+        socket.emit('kickPlayer', playerObj.player);
+        socket.on('getPlayers', (players) => setGame(players));
+    }
 
     return (
         <div className="JoinGame">
@@ -64,7 +68,12 @@ const JoinGame: FC = () => {
 
             <div className="players">
                 {
-                    game.map((e, i) => <p>{e.userName} : {e.id} : {e.hand}</p>)
+                    game.map((e, i) => (
+                        <div>
+                            <p>{e.userName} : {e.id} : {e.hand}</p>
+                            <button onClick={() => kickPlayer({player: e})}>Exit game</button>
+                        </div>
+                    ))
                 }
             </div>
             {/* <BrowserRouter>

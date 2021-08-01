@@ -20,7 +20,7 @@
 
 ---------------------------------------------------------------------------------------- */
 
-const { addPlayer, getPlayer, getActivePlayers } = require('./users');
+const { addPlayer, getPlayer, getActivePlayers, removePlayer } = require('./users');
 
 const express = require('express')
 const socketIO = require('socket.io');
@@ -50,15 +50,23 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log("A user connected");
     
+    socket.emit('getPlayers', getActivePlayers());
+
     socket.on('registerPlayer', ({ id, userName, hand }) => {
-        const {newPlayer} = addPlayer({
-            id: id,
+        const newPlayer = addPlayer({
+            id: socket.id,
             userName: userName,
             hand: hand
         });
 
         // socket.broadcast.emit('playersUpdated', getActivePlayers());
         socket.emit('playersUpdated', getActivePlayers());
+    });
+    
+    
+    socket.on('kickPlayer', ({id}) => {
+        let players = removePlayer(id);
+        socket.emit('getPlayers', getActivePlayers());
     });
 });
 
