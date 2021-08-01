@@ -11,8 +11,6 @@ import { JoinGame } from './components/JoinGame';
 
 
 const App: FC = () => {
-    const [msg, setMsg] = useState("Dummy Message");
-    
     // const game_uri = 'http://localhost:5000';
     // const socket = io(game_uri, {
     //     reconnectionDelay: 10000,
@@ -33,7 +31,6 @@ const App: FC = () => {
 
     return (
         <div className="App">
-            <h1>{msg}</h1>
             <BrowserRouter>
                 <Route path="/" exact render={() => (
                     <JoinGame/>

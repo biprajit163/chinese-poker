@@ -1,7 +1,8 @@
 import React, { useState, useEffect, FC } from 'react';
 import { BrowserRouter, Route, Link} from 'react-router-dom';
 import { io } from 'socket.io-client';
-import Deck from './CardDeck';
+import { Deck } from './CardDeck';
+import { Game } from './Game';
 
 
 export const JoinGame: FC = () => {
@@ -20,16 +21,16 @@ export const JoinGame: FC = () => {
 
     const [player, setPlayer] = useState<PlayerInfo>(initialPlayerState);
     const [game, setGame] = useState([]);
+    const gameDeck = Deck();
 
     const game_uri = 'http://localhost:5000';
     const socket = io(game_uri, {
         reconnectionDelay: 10000,
     })
 
-    useEffect(() => {
-        socket.on('getPlayers', (players) => setGame(players));
-    }, [])
-
+    // useEffect(() => {
+    //     socket.on('getPlayers', (players) => setGame(players));
+    // }, [])
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
@@ -47,12 +48,6 @@ export const JoinGame: FC = () => {
         });
     };
 
-
-    const kickPlayer = (playerObj: any) => {
-        socket.emit('kickPlayer', playerObj.player);
-        socket.on('getPlayers', (players) => setGame(players));
-    }
-
     return (
         <div className="JoinGame">
             <form onSubmit={handleSubmit}>
@@ -66,22 +61,7 @@ export const JoinGame: FC = () => {
                     <button type="submit" className="btn btn-primary">submit</button>
                 </div>
             </form>
-
-            <div className="players">
-                {
-                    game.map((e, i) => (
-                        <div>
-                            <p>{e.userName} : {e.id} : {e.hand}</p>
-                            <button onClick={() => kickPlayer({player: e})}>Exit game</button>
-                        </div>
-                    ))
-                }
-            </div>
-            
-            <Deck/>
-            {/* <BrowserRouter>
-                <Route exact path="" render={}/>
-            </BrowserRouter> */}
+            <Game/>
         </div>
     );
 }

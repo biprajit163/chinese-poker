@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FC } from 'react';
 
-const Deck: FC = () => {
+export const Deck = () => {
 
     const [cards, setCards] = useState({
         suits: ["♥", "♦", "♠", "♣"],
@@ -9,32 +9,23 @@ const Deck: FC = () => {
 
     const [gameDeck, setGameDeck] = useState([]);
 
+    useEffect(() => {
+        makeGameDeck();
+        console.log(gameDeck);
+    }, [])
+
     const makeGameDeck = () => {
-        let deckArr = [];
+        let deckArr: any = [];
 
         for(let i=0; i < cards.suits.length; i++) {
             for(let j=0; j < cards.values.length; j++) {
                 deckArr.push(cards.values[j] + cards.suits[i]);
             }
         }
+
+        setGameDeck(deckArr);
     }
 
-    return (
-        <div className="Deck">
-            {
-                cards.suits.map(suit => (
-                    <div className="suit">
-                        <h3>{suit}</h3>
-                    </div>
-                ))
-                // gameDeck.map(card => (
-                //     <div className="card">
-                //         <h3>{card}</h3>
-                //     </div>
-                // ))
-            }
-        </div>
-    );
+    return gameDeck;
 }
 
-export default Deck;
