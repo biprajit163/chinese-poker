@@ -1,9 +1,10 @@
 import React, { useState, useEffect, FC } from 'react';
 import { BrowserRouter, Route, Link} from 'react-router-dom';
 import { io } from 'socket.io-client';
+import Deck from './CardDeck';
 
 
-const JoinGame: FC = () => {
+export const JoinGame: FC = () => {
 
     interface PlayerInfo {
         id?: number | undefined;
@@ -76,6 +77,8 @@ const JoinGame: FC = () => {
                     ))
                 }
             </div>
+            
+            <Deck/>
             {/* <BrowserRouter>
                 <Route exact path="" render={}/>
             </BrowserRouter> */}
@@ -83,4 +86,3 @@ const JoinGame: FC = () => {
     );
 }
 
-export default JoinGame;

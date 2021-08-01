@@ -7,7 +7,7 @@ import './App.css';
 import { io } from 'socket.io-client';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
 
-import JoinGame from './components/JoinGame';
+import { JoinGame } from './components/JoinGame';
 
 
 const App: FC = () => {
