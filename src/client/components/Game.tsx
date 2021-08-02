@@ -1,10 +1,15 @@
 import React, { useState, useEffect, FC } from 'react';
 import { io } from 'socket.io-client';
-import { Deck } from './CardDeck';
+import { Deck, Rules } from './CardDeck';
 
 
 
 export const Game: FC = () => {
+
+    const game_uri = 'http://localhost:5000';
+    const socket = io(game_uri, {
+        reconnectionDelay: 10000,
+    })
 
     interface PlayerInfo {
         id?: string,
@@ -27,15 +32,13 @@ export const Game: FC = () => {
         playerTwo: 0,
     })
     const gameDeck = Deck();
-
-    const game_uri = 'http://localhost:5000';
-    const socket = io(game_uri, {
-        reconnectionDelay: 10000,
-    })
+    
 
     useEffect(() => {
         socket.on('getPlayers', (data) => setPlayers(data));
     }, []);
+
+    useEffect(() => checkWinner(), [p1.card, p2.card]);
 
 
     const handleSubmit = (e: any) => {
@@ -54,9 +57,9 @@ export const Game: FC = () => {
         });
     };
 
-    const kickPlayer = (playerObj: any) => {
-        socket.emit('kickPlayer', playerObj.player);
-    }
+    // const kickPlayer = (playerObj: any) => {
+    //     socket.emit('kickPlayer', playerObj.player);
+    // }
 
     const handleShuffle = () => {
         let shuffled = gameDeck.sort(() => Math.random() - 0.5);
@@ -80,6 +83,13 @@ export const Game: FC = () => {
         }
     }
 
+    const checkWinner = () => {
+        let p1Card = p1.card;
+        let p2Card = p2.card;
+
+        let whoWon = Rules(p1Card, p2Card);
+        console.log(whoWon);
+    }
 
     return (
         <div className="JoinGame">
