@@ -20,7 +20,13 @@
 
 ---------------------------------------------------------------------------------------- */
 
-const { addPlayer, getPlayer, getActivePlayers } = require('./users');
+const { 
+    addPlayer, 
+    getPlayer, 
+    getActivePlayers, 
+    removePlayer,
+    setHands,
+} = require('./users');
 
 const express = require('express')
 const socketIO = require('socket.io');
@@ -42,28 +48,41 @@ const io = socketIO(server, {
 
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello Player One!!</h1>');
+    res.send('<h1>Chinese Poker server</h1>');
 });
 
 
 
 io.on('connection', (socket) => {
-    console.log("A user connected");
+    // console.log("A user connected");
     
-    socket.on('registerPlayer', (userName) => {
-        console.log("registered player: ", userName);
-        const {newPlayer} = addPlayer({
-            id: socket.id,
-            userName: userName
-        });
+    socket.emit('getPlayers', getActivePlayers());
 
-        socket.broadcast.emit('playersUpdated', getActivePlayers());
+    socket.on('registerPlayer', ({ id, userName, hand }) => {
+        const newPlayer = addPlayer({
+            id: socket.id,
+            userName: userName,
+            hand: hand
+        });
+        let activePlayers = getActivePlayers();
+        
+        socket.emit('playersUpdated', activePlayers);
+    });
+    
+    
+    socket.on('kickPlayer', ({id}) => {
+        let players = removePlayer(id);
+        socket.emit('getPlayers', getActivePlayers());
     });
 
-    socket.emit('serverToClient', "Hello Client!");
+    socket.on('shuffleDeck', ({ deck }) => {
+        let shuffledDeck = deck.sort(() => 0.5 - Math.random());
+        socket.emit('shuffleDeck', setHands(shuffledDeck));
+    })
 });
 
 
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
