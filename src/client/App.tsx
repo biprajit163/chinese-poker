@@ -7,33 +7,17 @@ import './App.css';
 import { io } from 'socket.io-client';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
 
-import { JoinGame } from './components/JoinGame';
+import { Game } from './components/Game';
+import { Deck } from './components/CardDeck';
 
 
 const App: FC = () => {
-    // const game_uri = 'http://localhost:5000';
-    // const socket = io(game_uri, {
-    //     reconnectionDelay: 10000,
-    // });
-
-    // useEffect(() => {
-    //     socket.on('playersUpdated', (players) => {
-    //         console.log("updated players: ", players);
-    //     });
-    // }, []);
-
-    // const handleClick = () => {
-    //     const player = {
-    //         userName: 'Player1'
-    //     };
-    //     socket.emit('registerPlayer', player);
-    // }
-
+    const gameDeck = Deck();
     return (
         <div className="App">
             <BrowserRouter>
-                <Route path="/" exact render={() => (
-                    <JoinGame/>
+                <Route exact path="/" render={() => (
+                    <Game/>
                 )}/>
             </BrowserRouter>
         </div>

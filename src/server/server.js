@@ -20,7 +20,13 @@
 
 ---------------------------------------------------------------------------------------- */
 
-const { addPlayer, getPlayer, getActivePlayers, removePlayer } = require('./users');
+const { 
+    addPlayer, 
+    getPlayer, 
+    getActivePlayers, 
+    removePlayer,
+    setHands,
+} = require('./users');
 
 const express = require('express')
 const socketIO = require('socket.io');
@@ -48,7 +54,7 @@ app.get('/', (req, res) => {
 
 
 io.on('connection', (socket) => {
-    console.log("A user connected");
+    // console.log("A user connected");
     
     socket.emit('getPlayers', getActivePlayers());
 
@@ -58,9 +64,9 @@ io.on('connection', (socket) => {
             userName: userName,
             hand: hand
         });
-
-        // socket.broadcast.emit('playersUpdated', getActivePlayers());
-        socket.emit('playersUpdated', getActivePlayers());
+        let activePlayers = getActivePlayers();
+        
+        socket.emit('playersUpdated', activePlayers);
     });
     
     
@@ -68,6 +74,11 @@ io.on('connection', (socket) => {
         let players = removePlayer(id);
         socket.emit('getPlayers', getActivePlayers());
     });
+
+    socket.on('shuffleDeck', ({ deck }) => {
+        let shuffledDeck = deck.sort(() => 0.5 - Math.random());
+        socket.emit('shuffleDeck', setHands(shuffledDeck));
+    })
 });
 
 
