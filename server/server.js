@@ -51,7 +51,12 @@ const io = socketIO(server, {
 
 
 app.get('/', (req, res) => {
-    res.send('<h1>Chinese Poker server</h1>');
+    res.send(`
+        <div class="welcome-page" style="text-align: 'center'">
+            <h1>Poker Roulette</h1>
+            <p>Welcome to the poker roulette server</p>
+        </div>
+    `);
 });
 
 
