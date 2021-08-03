@@ -25,6 +25,7 @@ const {
     getPlayer, 
     getActivePlayers, 
     removePlayer,
+    removeAllPlayers,
     setHands,
 } = require('./users');
 
@@ -70,9 +71,9 @@ io.on('connection', (socket) => {
     });
     
     
-    socket.on('kickPlayer', ({id}) => {
-        let players = removePlayer(id);
-        socket.emit('getPlayers', getActivePlayers());
+    socket.on('kickPlayers', ({ allPlayers }) => {
+        allPlayers = [];
+        socket.emit('kickPlayers', { players: allPlayers });
     });
 
     socket.on('shuffleDeck', ({ deck }) => {

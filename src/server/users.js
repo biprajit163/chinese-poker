@@ -20,6 +20,11 @@ const removePlayer = (id) => {
     }
 }
 
+const removeAllPlayers = () => {
+    players = [];
+    return players;
+}
+
 const getPlayer = ({ id }) => {
     return(
         players.find(player => player.id === id)
@@ -56,6 +61,7 @@ module.exports = {
     addPlayer,
     getPlayer,
     removePlayer,
+    removeAllPlayers,
     getActivePlayers,
     setHands
 };

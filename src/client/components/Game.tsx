@@ -23,6 +23,8 @@ export const Game: FC = () => {
         hand: [],
     }
 
+    const gameDeck = Deck();
+
     const [player, setPlayer] = useState<PlayerInfo>(initialPlayerState);
     const [players, setPlayers] = useState([]);
     const [p1, setP1] = useState({ id: "", card: "" });
@@ -30,13 +32,32 @@ export const Game: FC = () => {
     const [points, setPoints] = useState({
         playerOne: 0,
         playerTwo: 0,
-    })
-    const gameDeck = Deck();
-    
+    });
+
+    const [timer, setTimer] = useState(60);
+    const [display, setDisplay] = useState(false);
 
     useEffect(() => {
         socket.on('getPlayers', (data) => setPlayers(data));
     }, []);
+    
+
+    useEffect(() => {
+
+        if(players.length === 2 && timer > 0) {
+            setTimeout(() => setTimer(timer - 1), 1000);
+        } else if(timer === 0) {
+            if(points.playerOne > points.playerTwo) {
+                alert(players[0].userName + " won");
+            } else if(points.playerOne < points.playerTwo) {
+                alert(players[1].userName + " won");
+            } else if(points.playerOne === points.playerTwo) {
+                alert("It was a tie!");
+            }
+        }
+
+    }, [timer, players]);
+    
 
     useEffect(() => {
         
@@ -63,7 +84,6 @@ export const Game: FC = () => {
                         });
                         socket.on('removeCardHand', data => {
                             players[0].hand = data.newHand;
-                            console.log(players[0].hand);
                         });
                     };
                 };
@@ -87,6 +107,9 @@ export const Game: FC = () => {
                         socket.emit('removeCard', { 
                             playerHand: players[i].hand,
                             cardPicked: p2.card  
+                        });
+                        socket.on('removeCardHand', data => {
+                            players[1].hand = data.newHand;
                         });
                     };
                 };
@@ -122,9 +145,11 @@ export const Game: FC = () => {
         });
     };
 
-    // const kickPlayer = (playerObj: any) => {
-    //     socket.emit('kickPlayer', playerObj.player);
-    // }
+    const kickPlayers = () => {
+        socket.emit('kickPlayers', { allPlayers: players });
+        socket.on('kickPlayers', (data) => setPlayers(data.players));
+        setTimer(60);
+    }
 
     const handleShuffle = () => {
         let shuffled = gameDeck.sort(() => Math.random() - 0.5);
@@ -149,55 +174,86 @@ export const Game: FC = () => {
     }
 
     return (
-        <div className="JoinGame">
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label><h2>Join Game</h2></label>
-                </div>
-                <div className="mb-3">
-                    <label>Username:</label>
-                    <input 
-                        type="text" 
-                        value={player.userName}
-                        onChange={handleUsernameChange}
-                    />
-                    <button type="submit" className="btn btn-primary">submit</button>
-                </div>
-            </form>
+      <div className="JoinGame">
+        
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label>
+              <h2>Join Game</h2>
+            </label>
+          </div>
+          <div className="mb-3">
+            <label>Username:</label>
+            <input
+              type="text"
+              value={player.userName}
+              onChange={handleUsernameChange}
+            />
+            <button type="submit" className="btn btn-primary">
+              submit
+            </button>
+          </div>
+        </form>
 
-            <div className="game-board">
-                <button 
-                    onClick={() => handleShuffle()}
-                    className="btn btn-success"
-                >Shuffle Deck</button>
-                {
-                    players.map(player => {
-                        return (
-                          <div className={`${player.userName}`}>
-                            <p>Username: {player.userName}</p>
-                            <div className={`${player.userName}-hand container`}>
-                              hand:
-                              <div className="row">
-                                {player.hand.map((card) => {
-                                  return (
-                                    <div
-                                      className="card col"
-                                      onClick={(e) => {
-                                        checkCardVal(e, { id: player.id })
-                                      }}
-                                    >
-                                      {card}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          </div>
-                        ); 
-                    })
-                }
-            </div>
+        <div className="game-timer">{timer}</div>
+
+        <div className="game-board">
+          <button onClick={() => handleShuffle()} className="btn btn-success">
+            Shuffle Deck
+          </button>
+
+        <button onClick={() => kickPlayers()} className="btn btn-danger">
+            End Game
+        </button>
+
+          {players.map((player) => {
+            return (
+              <div
+                className={`${player.userName}`}
+                style={{
+                  marginTop: "25px",
+                }}
+              >
+                <p>Username: {player.userName}</p>
+                <div className={`${player.userName}-hand container`}>
+                  hand:
+                  <div className="row">
+                    {player.hand.map((card) => {
+                      return (
+                        <div
+                          className={`card col`}
+                          onClick={(e) => {
+                            checkCardVal(e, { id: player.id });
+                            setDisplay(true);
+                            setTimeout(() => setDisplay(false), 1000);
+                          }}
+                          style={
+                            player.userName === players[0].userName &&
+                            display === true
+                              ? {
+                                  color: "blue",
+                                }
+                              : player.userName === players[1].userName &&
+                                display === true
+                              ? {
+                                  color: "red",
+                                }
+                              : {
+                                  color: "white",
+                                }
+                          }
+                        >
+                          {card}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
+      </div>
     );
 }
 
