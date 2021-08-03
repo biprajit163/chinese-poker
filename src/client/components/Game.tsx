@@ -7,6 +7,8 @@ import { Deck, Rules } from './CardDeck';
 export const Game: FC = () => {
 
     const game_uri = 'http://localhost:5000';
+    // const game_uri = 'https://poker-roulette-server.herokuapp.com/'; 
+
     const socket = io(game_uri, {
         reconnectionDelay: 10000,
     })
@@ -40,7 +42,7 @@ export const Game: FC = () => {
     useEffect(() => {
         socket.on('getPlayers', (data) => setPlayers(data));
     }, []);
-    
+
 
     useEffect(() => {
 
@@ -145,11 +147,6 @@ export const Game: FC = () => {
         });
     };
 
-    const kickPlayers = () => {
-        socket.emit('kickPlayers', { allPlayers: players });
-        socket.on('kickPlayers', (data) => setPlayers(data.players));
-        setTimer(60);
-    }
 
     const handleShuffle = () => {
         let shuffled = gameDeck.sort(() => Math.random() - 0.5);
@@ -171,6 +168,18 @@ export const Game: FC = () => {
                 card: cardVal
             })
         }
+    }
+
+    const kickPlayers = () => {
+
+      socket.emit('kickPlayers', players);
+      socket.on('getPlayers', (data) => setPlayers(data));
+
+      setTimer(60);
+      setPoints({
+        playerOne: 0,
+        playerTwo: 0
+      })
     }
 
     return (

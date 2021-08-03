@@ -52,7 +52,7 @@ const io = socketIO(server, {
 
 app.get('/', (req, res) => {
     res.send(`
-        <div class="welcome-page" style="text-align: 'center'">
+        <div>
             <h1>Poker Roulette</h1>
             <p>Welcome to the poker roulette server</p>
         </div>
@@ -77,10 +77,8 @@ io.on('connection', (socket) => {
         socket.emit('playersUpdated', activePlayers);
     });
     
-    
-    socket.on('kickPlayers', ({ allPlayers }) => {
-        allPlayers = [];
-        socket.emit('kickPlayers', { players: allPlayers });
+    socket.on('kickPlayers', (data) => {
+        socket.emit('getPlayers', removeAllPlayers(data));
     });
 
     socket.on('shuffleDeck', ({ deck }) => {

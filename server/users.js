@@ -1,4 +1,4 @@
-const players = [];
+let players = [];
 
 const addPlayer = ({ id, userName, hand }) => {
     const maxPlayers = players.length;
@@ -20,8 +20,9 @@ const removePlayer = (id) => {
     }
 }
 
-const removeAllPlayers = () => {
-    players = [];
+const removeAllPlayers = (arr) => {
+    arr = [];
+    players = arr;
     return players;
 }
 
@@ -47,11 +48,6 @@ const setHands = (deck) => {
             i++;
         }
     }
-    // for(let i=0; i < deck.length; i++) {
-    //     for(let j=0; j < players.length; j++) {
-    //         players[j].hand.push(deck[i]);
-    //     }
-    // }
 
     return players;
 }
