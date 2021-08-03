@@ -6,8 +6,8 @@ import { Deck, Rules } from './CardDeck';
 
 export const Game: FC = () => {
 
-    const game_uri = 'http://localhost:5000';
-    // const game_uri = 'https://poker-roulette-server.herokuapp.com/'; 
+    // const game_uri = 'http://localhost:5000';
+    const game_uri = 'https://poker-roulette-server.herokuapp.com/'; 
 
     const socket = io(game_uri, {
         reconnectionDelay: 10000,
