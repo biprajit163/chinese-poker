@@ -2,6 +2,11 @@
     text-align: center;
 }
 
+.Game {
+    background-color: rgb(30, 177, 235);
+    height: 100vh;
+}
+
 .card {
     width: 60px;
     height: 80px;
@@ -12,4 +17,11 @@
 .game-timer {
     font-size: 80px;
     font-weight: bold;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 25%;
 }

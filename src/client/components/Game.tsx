@@ -10,7 +10,7 @@ export const Game: FC = () => {
     const game_uri = 'https://poker-roulette-server.herokuapp.com/'; 
 
     const socket = io(game_uri, {
-        reconnectionDelay: 10000,
+      reconnectionDelay: 10000,
     })
 
     interface PlayerInfo {
@@ -183,8 +183,7 @@ export const Game: FC = () => {
     }
 
     return (
-      <div className="JoinGame">
-        
+      <div className="Game">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label>
@@ -205,28 +204,52 @@ export const Game: FC = () => {
         </form>
 
         <div className="game-timer">{timer}</div>
-
-        <div className="game-board">
-          <button onClick={() => handleShuffle()} className="btn btn-success">
-            Shuffle Deck
-          </button>
+        
+        <button onClick={() => handleShuffle()} className="btn btn-success">
+          Shuffle Deck
+        </button>
 
         <button onClick={() => kickPlayers()} className="btn btn-danger">
             End Game
         </button>
+
+        <div className="game-board">
 
           {players.map((player) => {
             return (
               <div
                 className={`${player.userName}`}
                 style={{
-                  marginTop: "25px",
+                  margin: "25px, 25px",
                 }}
               >
                 <p>Username: {player.userName}</p>
+                <p className="points">
+                  <span style={
+                    player.userName === players[0].userName ? 
+                    {
+                      fontSize: "36px",
+                      fontWeight: "bold",
+                      color: 'blue'
+                    } :
+                    player.userName === players[1].userName ?
+                    {
+                      fontSize: "36px",
+                      fontWeight: "bold",
+                      color: 'red'
+                    } : 
+                    {
+                      fontSize: "36px",
+                      fontWeight: "bold",
+                      color: 'black'
+                    }
+                  }>{player.userName === players[0].userName ? 
+                  points.playerOne : player.userName === players[1].userName ?
+                  points.playerTwo : 0}</span>
+                </p>
+
                 <div className={`${player.userName}-hand container`}>
-                  hand:
-                  <div className="row">
+                  <div className="row"> hand:
                     {player.hand.map((card) => {
                       return (
                         <div
