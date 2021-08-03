@@ -38,7 +38,72 @@ export const Game: FC = () => {
         socket.on('getPlayers', (data) => setPlayers(data));
     }, []);
 
-    useEffect(() => checkWinner(), [p1.card, p2.card]);
+    useEffect(() => {
+        
+        if(
+            p1.card !== "" &&
+            p2.card !== ""
+        ) {
+            let whoWon = Rules(p1.card, p2.card);
+
+            if(whoWon === "p1") {
+                setPoints(prevState => {
+                    return({
+                        ...prevState,
+                        playerOne: prevState.playerOne + 1
+                    });
+                });
+
+
+                for(let i=0; i < players.length; i++) {
+                    if(players[i].id === p1.id) {
+                        socket.emit('removeCard', { 
+                            playerHand: players[i].hand,
+                            cardPicked: p1.card  
+                        });
+                        socket.on('removeCardHand', data => {
+                            players[0].hand = data.newHand;
+                            console.log(players[0].hand);
+                        });
+                    };
+                };
+
+                setTimeout(() => {
+                    setP1({ id: "", card: ""});
+                    setP2({ id: "", card: ""});
+                }, 500);
+
+            } else if(whoWon === "p2") {
+                setPoints(prevState => {
+                    return({
+                        ...prevState,
+                        playerTwo: prevState.playerTwo + 1
+                    });
+                });
+
+
+                for(let i=0; i < players.length; i++) {
+                    if(players[i].id === p2.id) {
+                        socket.emit('removeCard', { 
+                            playerHand: players[i].hand,
+                            cardPicked: p2.card  
+                        });
+                    };
+                };
+
+                setTimeout(() => {
+                    setP1({ id: "", card: ""});
+                    setP2({ id: "", card: ""});
+                }, 500);
+
+            } else if(whoWon === "") {
+                setTimeout(() => {
+                    setP1({ id: "", card: ""});
+                    setP2({ id: "", card: ""});
+                }, 500);   
+            }
+        };
+    }, [p1.card, p2.card]);
 
 
     const handleSubmit = (e: any) => {
@@ -81,14 +146,6 @@ export const Game: FC = () => {
                 card: cardVal
             })
         }
-    }
-
-    const checkWinner = () => {
-        let p1Card = p1.card;
-        let p2Card = p2.card;
-
-        let whoWon = Rules(p1Card, p2Card);
-        console.log(whoWon);
     }
 
     return (

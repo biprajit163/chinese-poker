@@ -78,7 +78,21 @@ io.on('connection', (socket) => {
     socket.on('shuffleDeck', ({ deck }) => {
         let shuffledDeck = deck.sort(() => 0.5 - Math.random());
         socket.emit('shuffleDeck', setHands(shuffledDeck));
+    });
+
+
+    socket.on('removeCard', ({ playerHand, cardPicked }) => {
+        for(let i=0; i < playerHand.length; i++) {
+            if(playerHand[i] === cardPicked) {
+                playerHand.splice(i, 1)
+            }
+        }
+
+        console.log(playerHand);
+
+        socket.emit('removeCardHand', { newHand: playerHand });
     })
+
 });
 
 
