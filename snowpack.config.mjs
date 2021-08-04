@@ -34,5 +34,5 @@ export default {
     historyApiFallback: true,
     contentBase: './',
     hot: true,
-  },
+  }
 };
