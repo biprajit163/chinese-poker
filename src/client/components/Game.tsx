@@ -19,7 +19,7 @@ export const Game: FC = () => {
         hand?: string[];
     }
 
-    const initialPlayerState: any | undefined = {
+    const initialPlayerState: any | never = {
         id: "",
         userName: "",
         hand: [],
@@ -28,7 +28,7 @@ export const Game: FC = () => {
     const gameDeck = Deck();
 
     const [player, setPlayer] = useState<PlayerInfo>(initialPlayerState);
-    const [players, setPlayers] = useState([]);
+    const [players, setPlayers] = useState<any>([]);
     const [p1, setP1] = useState({ id: "", card: "" });
     const [p2, setP2] = useState({ id: "", card: "" });
     const [points, setPoints] = useState({
@@ -154,7 +154,7 @@ export const Game: FC = () => {
         socket.on('shuffleDeck', (data) => setPlayers(data));
     }
 
-    const checkCardVal = (e: any, cardObj) => {
+    const checkCardVal = (e: any, cardObj: any) => {
         let cardVal = e.target.innerHTML;
 
         if(cardObj.id === players[0].id) {
@@ -215,7 +215,7 @@ export const Game: FC = () => {
 
         <div className="game-board">
 
-          {players.map((player) => {
+          {players.map((player: any) => {
             return (
               <div
                 className={`${player.userName}`}
@@ -250,7 +250,7 @@ export const Game: FC = () => {
 
                 <div className={`${player.userName}-hand container`}>
                   <div className="row"> hand:
-                    {player.hand.map((card) => {
+                    {player.hand.map((card: any) => {
                       return (
                         <div
                           className={`card col`}
