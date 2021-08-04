@@ -34,10 +34,5 @@ export default {
     historyApiFallback: true,
     contentBase: './',
     hot: true,
-  },
-  // buildServer: {
-  //   historyApiFallback: true,
-  //   contentBase: './',
-  //   hot: true,
-  // }
+  }
 };
