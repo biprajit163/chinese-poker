@@ -1,5 +1,6 @@
 .App {
     text-align: center;
+    height: 100vh;
 }
 
 .Game {
@@ -24,4 +25,57 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 1fr;
     grid-column-gap: 25%;
+}
+
+.Home {
+    height: 100vh;
+    overflow: auto;
+    margin: 0;
+    background-color: rgba(94, 7, 156, 0.829);
+}
+
+.title-container {
+    text-align: center;
+    color: whitesmoke;
+}
+
+.title-container > h1 {
+    font-size: 55px;
+}
+
+.btn-primary {
+    background-color: #1c2841 !important;
+}
+
+.btn-primary:hover {
+    background-color: #566c8d !important;
+}
+
+
+.rules-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bolder;
+    width: 60%;
+    height: 50%;
+    margin: 6em auto;
+    background-color: rgb(212, 15, 64);
+    box-shadow: 
+        0 0 50px hsl(0, 65%, 67%),
+        0 0 80px hsl(0, 55%, 58%);
+}
+
+.rules-section > span {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.profile-info {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20%;
+    padding-right: 20%;
+    background-color: rgba(143, 202, 206, 0.993);
 }
